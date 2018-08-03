@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% if config.SERVER_MODE and config.SHOW_GRAVATAR_IMAGE -%}
+{% import 'browser/macros/gravatar_icon.macro' as IMG with context %}
+{% elif config.SERVER_MODE %}
+{% import 'browser/macros/static_user_icon.macro' as IMG with context %}
+{% endif %}
+
+{% block title %}{{ config.APP_NAME }}{% endblock %}
+
+{% block init_script %}
+try {
+require(
+['sources/generated/app.bundle'],
+function() {
+},
+function() {
+/* TODO:: Show proper error dialog */
+console.log(arguments);
+});
+} catch (err) {
+/* Show proper error dialog */
+console.log(err);
+}
+
+/*
+ * Show loading spinner till every js module is loaded completely
+ * Referenced url:
+ * http://stackoverflow.com/questions/15581563/requirejs-load-script-progress
+ * Little bit tweaked as per need
+ */
+require.onResourceLoad = function (context, map, depMaps) {
+  var loadingStatusEl = panel = document.getElementById('pg-spinner');
+  if (loadingStatusEl) {
+    if (!context) {
+      // we will call onResourceLoad(false) by ourselves when requirejs
+      // is not loading anything hide the indicator and exit
+      setTimeout(function() {
+        if (panel != null) {
+            try{
+                $(panel).remove();
+            }
+            catch(e){
+                panel.outerHTML = "";
+                delete panel;
+            }
+          return;
+        }
+      }, 500);
+    }
+
+    // show indicator when any module is loaded and
+    // shedule requirejs status (loading/idle) check
+    panel.style.display = "";
+    clearTimeout(panel.ttimer);
+    panel.ttimer = setTimeout(function () {
+      var context = require.s.contexts._;
+      var inited = true;
+      for (name in context.registry) {
+        var m = context.registry[name];
+        if (m.inited !== true) {
+          inited = false;
+          break;
+        }
+      }
+
+      // here the "inited" variable will be true, if requirejs is "idle",
+      // false if "loading"
+      if (inited) {
+        // will fire if module loads in 400ms. TODO: reset this timer
+        // for slow module loading
+        require.onResourceLoad(false);
+      }
+    }, 400)
+  }
+};
+
+{% if config.SERVER_MODE %}
+window.onload = function(e){
+ setTimeout(function() {
+   var gravatarImg = {{ IMG.PREPARE_HTML()|safe }}
+   //$('#navbar-menu .navbar-right > li > a').html(gravatarImg);
+   var navbarRight = document.getElementById("navbar-menu").getElementsByClassName("navbar-right")[0];
+   if (navbarRight) {
+     var list = navbarRight.getElementsByTagName("LI")[0];
+     list.getElementsByTagName("a")[0].innerHTML = gravatarImg;
+   }
+ }, 1000);
+};
+{% endif %}
+{% endblock %}
+
+{% block body %}
+<style>
+#pg-spinner {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0.6;
+  z-index: 1056;
+}
+#pg-spinner .pg-sp-content {
+  position: absolute;
+  width: 100%;
+  top: 40%;
+}
+#pg-spinner .pg-sp-icon {
+  font-size: 50px;
+  text-align: center;
+  color: #ccc;
+}
+#pg-spinner .pg-sp-text {
+  font-size: 20px;
+  text-align: center;
+  color: #fff;
+}
+.pgadmin_header_logo {
+  cursor: default;
+}
+</style>
+<div id="pg-spinner">
+  <div class="pg-sp-content">
+    <div class="row"><div class="col-xs-12 pg-sp-icon fa fa-spinner fa-pulse"></div></div>
+    <div class="row"><div class="col-xs-12 pg-sp-text">{{ _('Loading {0} v{1}...').format(config.APP_NAME, config.APP_VERSION) }}</div></div>
+  </div>
+</div>
+<nav class="navbar-inverse navbar-fixed-top pg-navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu">
+                <span class="sr-only">{{ _('Toggle navigation') }}</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand pgadmin_header_logo" onClick="return false;" href="{{ '#' }}"
+               title="{{ config.APP_NAME }} {{ _('logo') }}">
+                <i class="app-icon {{ config.APP_ICON }}"></i>
+                <span>&nbsp;{{ config.APP_NAME }}</span>
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-menu" role="navigation">
+
+            <ul class="nav navbar-nav">
+
+                <li id="mnu_file" class="dropdown hide">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{
+                        _('File') }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu navbar-inverse" role="menu"></ul>
+                </li>
+                <li id="mnu_edit" class="dropdown hide">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{
+                        _('Edit') }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu navbar-inverse" role="menu"></ul>
+                </li>
+                <li id="mnu_obj" class="dropdown ">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{
+                        _('Object') }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu navbar-inverse" role="menu"></ul>
+                </li>
+                <li id="mnu_management" class="dropdown hide">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{
+                        _('Management') }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu navbar-inverse" role="menu"></ul>
+                </li>
+                <li id="mnu_tools" class="dropdown hide">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{
+                        _('Tools') }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu navbar-inverse" role="menu"></ul>
+                </li>
+                <li id="mnu_help" class="dropdown hide">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{
+                        _('Help') }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu navbar-inverse" role="menu"></ul>
+                </li>
+            </ul>
+            {% if config.SERVER_MODE %}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></a>
+                    <ul class="dropdown-menu navbar-inverse">
+                        <li>
+                            <a href="#" onclick="pgAdmin.Browser.UserManagement.change_password(
+                              '{{ url_for('browser.change_password') }}'
+                            )">
+                                {{ _('Change Password') }}
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        {% if is_admin %}
+                        <li><a href="#" onclick="pgAdmin.Browser.UserManagement.show_users()">{{ _('Users') }}</a></li>
+                        <li class="divider"></li>
+                        {% endif %}
+                        <li><a href="{{ url_for('security.logout') }}?next={{url_for('browser.index')}}">{{ _('Logout') }}</a></li>
+                    </ul>
+                </li>
+            </ul>
+            {% endif %}
+        </div>
+
+    </div>
+</nav>
+
+<div id="dockerContainer" class="pg-docker"></div>
+
+{% include 'browser/messages.html' %}
+
+{% endblock %}

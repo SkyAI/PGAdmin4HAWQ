@@ -1,0 +1,162 @@
+.alert-icon {
+  display: flex;
+  align-items: center;
+  color: white;
+  padding: 15px 15px 15px 17px;
+  width: 50px;
+  min-height: 50px;
+  font-size: 14px;
+  text-align: center;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.alert-row {
+  display: block;
+  width: auto;
+}
+
+.alert-box {
+  padding: 0px;
+  display: inline-block;
+}
+
+.alert.alert-info {
+  padding: 15px;
+}
+
+.success-icon {
+  background: $color-green-3;
+}
+
+.error-icon {
+  background: $color-red-3;
+}
+
+.info-icon {
+  background: #2c76b4;
+}
+
+.alert-text {
+  display: inline-block;
+  padding: 0 12px 0 10px;
+  align-self: center;
+  // To make sure IE picks up the correct font
+  font-family: 'Open Sans';
+}
+
+.alert-info {
+  border-color: $color-blue-2;
+  background-image: none;
+}
+
+.alert-danger {
+  background-image: none;
+}
+
+.grid-error, .graph-error {
+  .alert-row {
+    align-items: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.ajs-message {
+  .media {
+    display: block;
+  }
+}
+
+.alert, .ajs-message {
+  .media {
+    .media-body {
+      display: inline-block;
+      width: auto;
+      .alert-icon {
+        display: inline-block;
+      }
+      .alert-text {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.pg-prop-status-bar {
+  padding: 5px;
+
+  .media-body {
+    display: flex;
+    width: auto;
+  }
+
+  .alert-icon {
+    padding: 8px 8px 8px 10.5px;
+    width: 35px;
+    height: 35px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    min-height: auto;
+  }
+
+  .alert-text {
+    flex-grow: 1;
+    border: 1px solid $color-red-2;
+    padding: 7px 12px 6px 10px;
+    border-left: none;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+
+  .error-in-footer {
+    border-radius: 4px;
+
+    .alert-text {
+      border-color: $color-red-2;
+    }
+  }
+
+  .success-in-footer {
+    border-radius: 4px;
+
+    .alert-text {
+      border-color: $color-green-2;
+    }
+  }
+
+  .info-in-footer {
+    border: 1px solid $primary-blue;
+    border-radius: 4px;
+    height: 35px;
+
+    .alert-text {
+      border: none;
+    }
+  }
+}
+
+//Internet Explorer specific CSS
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .styleguide {
+    .alert-danger {
+      width: auto;
+    }
+
+    .alert-info {
+      width: auto;
+    }
+  }
+
+  .alert-danger {
+    width: 90%;
+  }
+
+  .alert-info {
+    width: 90%;
+  }
+}

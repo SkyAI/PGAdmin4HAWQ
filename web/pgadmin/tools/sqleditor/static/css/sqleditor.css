@@ -1,0 +1,627 @@
+#main-editor_panel {
+  height: 100%;
+  width: 100%;
+}
+
+.sql-editor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top : 0;
+  bottom: 0;
+}
+
+.sql-editor-busy-fetching {
+  position:absolute;
+  left: 0;
+  top: 65px;
+  bottom: 0;
+  right: 0;
+  margin:0;
+  padding: 0;
+  background: black;
+  opacity: 0.6;
+  z-index: 100;
+}
+
+#editor-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top : 65px;
+  bottom: 0;
+  z-index: 0;
+}
+
+.sql-editor-grid-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.sql-editor-grid-container.has-no-footer {
+  height: 100%;
+}
+
+.filter-container {
+  position: relative;
+  background-color: white;
+  border: 1px solid black;
+  box-shadow: 0.5px 0.5px 5px #000;
+  padding-bottom: 30px;
+  top: 10px;
+  z-index: 1;
+  margin: auto;
+  width: 60%;
+}
+
+.filter-container .CodeMirror-scroll {
+  min-height: 120px;
+}
+
+.filter-container .sql-textarea{
+  box-shadow: 0.1px 0.1px 3px #000;
+  margin-bottom: 5px;
+}
+
+.filter-title {
+  background-color: #2C76B4;
+  padding: 2px;
+  color: white;
+  font-size: 13px;
+}
+
+#filter .btn-group {
+  margin-right: 2px;
+  float: right;
+}
+
+#filter .btn-group > button {
+  padding: 3px;
+}
+
+#filter .btn-group .btn-primary {
+  margin: auto !important;
+}
+
+.has-select-all table thead tr th:nth-child(1),
+.has-select-all table tbody tr td:nth-child(1) {
+  width: 35px !important;
+  max-width: 35px !important;
+  min-width: 35px !important;
+}
+
+.sql-editor-message {
+  white-space:pre-wrap;
+  font-family: "Source Code Pro";
+  padding-top: 5px;
+  padding-left: 10px;
+  overflow: auto;
+  height: 100%;
+  font-size: 0.925em;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.limit-enabled {
+  background-color: white;
+}
+
+.sql-editor-history-container {
+  height: 100%;
+  overflow: auto;
+  border-top: 1px solid #cccccc;
+}
+
+.sql-status-cell {
+  max-width: 30px;
+}
+
+.btn-circle {
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  padding: 0;
+  font-size: 10px;
+  line-height: 1.428571429;
+  border-radius: 10px;
+  cursor: auto;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.sql-editor-mark {
+  border-bottom: 2px dotted red;
+}
+
+#editor-panel .CodeMirror-activeline-background {
+  background: #D9EDF7;
+}
+
+.CodeMirror-foldmarker {
+  color: blue;
+  text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px;
+  font-family: "Open Sans";
+  line-height: .3;
+  cursor: pointer;
+}
+
+.CodeMirror {
+  min-height: 100%;
+  height: 100%;
+}
+
+#editor-panel .CodeMirror-gutter {
+  min-width: 1em;
+}
+
+#output-panel {
+  height: 100% !important;
+}
+
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+  cursor: pointer;
+}
+
+.CodeMirror-foldgutter-open:after {
+  content: "\25BC";
+}
+
+.CodeMirror-foldgutter-folded:after {
+  content: "\25B6";
+}
+
+
+.sql-editor-explain {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.CodeMirror-hints {
+  position: absolute;
+  z-index: 10;
+  overflow: hidden;
+  list-style: none;
+
+  margin: 0;
+  padding: 2px;
+
+  -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  border-radius: 3px;
+  border: 1px solid #ccc;
+
+  background: white;
+  font-size: 90%;
+  font-family: "Source Code Pro";
+
+  max-height: 20em;
+  overflow-y: auto;
+}
+
+.CodeMirror-hint {
+  margin: 0;
+  padding: 0 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  white-space: pre;
+  color: black;
+  cursor: pointer;
+}
+
+li.CodeMirror-hint-active {
+  background: #08f;
+  color: white;
+}
+
+.sqleditor-hint {
+  padding-left: 20px;
+}
+
+.CodeMirror-hint .fa::before {
+  padding-right: 7px;
+}
+
+h2 {
+  font-size: 10pt;
+  border-bottom: 1px dotted gray;
+}
+
+ul {
+  margin-left: 0;
+  padding: 0;
+  cursor: default;
+}
+
+li {
+  padding: 0 0 0 0px;
+  list-style: none;
+  margin: 0;
+}
+
+#datagrid {
+  background: white;
+  outline: 0;
+  font-size: 9pt;
+}
+
+.slick-header-column.ui-state-default {
+    height: 32px !important;
+}
+
+#datagrid .grid-header label {
+  display: inline-block;
+  font-weight: bold;
+  margin: auto auto auto 6px;
+}
+
+.grid-header .ui-icon {
+  margin: 4px 4px auto 6px;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.grid-header .ui-icon.ui-state-hover {
+  background-color: white;
+}
+
+.slick-cell.cell-move-handle {
+  font-weight: bold;
+  text-align: right;
+  border-right: solid gray;
+  background: #efefef;
+  cursor: move;
+}
+
+.cell-move-handle:hover {
+  background: #b6b9bd;
+}
+
+.slick-row.selected .cell-move-handle {
+  background: #D5DC8D;
+}
+
+.slick-row .cell-actions {
+  text-align: left;
+}
+
+.slick-row.complete {
+  background-color: #DFD;
+  color: #555;
+}
+
+/* Slick.Editors.Text, Slick.Editors.Date */
+#datagrid .slick-header > input.editor-text {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  outline: 0;
+  padding: 0;
+}
+
+/* Slick.Editors.Checkbox */
+#datagrid .slick-header > input.editor-checkbox {
+  margin: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+}
+
+.cell-selection {
+  border-right-color: #ccc;
+  border-right-style: solid;
+  background: #f5f5f5;
+  color: gray;
+  text-align: right;
+  font-size: 10px;
+}
+
+.slick-row.selected .cell-selection {
+  background-color: transparent; /* show default selected row background */
+}
+
+#datagrid .slick-header .ui-state-default,
+#datagrid .slick-header .ui-widget-content.ui-state-default,
+#datagrid .slick-header .ui-widget-header .ui-state-default {
+  background: none;
+}
+
+#datagrid .slick-header .slick-header-columns {
+  background: #ffffff;
+  height: 40px;
+  border-bottom: none;
+}
+
+#datagrid .slick-header .slick-header-column.ui-state-default {
+  color: #333333;
+  padding: 4px 0 3px 6px;
+  background-color: #E8E8E8;
+  border-bottom: 1px solid #CCCCCC !important;
+  border-right: 1px solid #CCCCCC !important;
+}
+
+#datagrid .slick-header .slick-header-column.selected {
+  background-color: #2C76B4;
+  color: #FFFFFF;
+}
+
+#datagrid .slick-header .slick-header-column .column-name {
+  font-weight: bold;
+  display: block;
+}
+
+.column-description {
+  display: table-cell;
+}
+
+.column-description {
+  display: table-cell;
+}
+
+.long_text_editor {
+  margin-left: 5px;
+  font-size: 12px !important;
+  padding: 1px 7px;
+}
+
+/* Slick.Editors.Text, Slick.Editors.Date */
+input.editor-text {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  outline: 0;
+  padding: 0;
+}
+
+/* Slick.Editors.Text, Slick.Editors.Date */
+textarea.editor-text {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  outline: 0;
+  padding: 0;
+}
+
+/* Slick.Editors.Checkbox */
+input.editor-checkbox {
+  margin: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+}
+
+/* remove outlined border on focus */
+input.editor-checkbox:focus {
+  outline: none;
+}
+
+/* Remove active cell border */
+.slick-cell.active {
+  border: 1px solid transparent;
+  border-right: 1px solid #ccc;
+  border-bottom-color: #ccc;
+}
+
+/* To highlight all newly inserted rows */
+.grid-canvas .new_row {
+  background: #dff0d7 !important;
+}
+
+/* To highlight all the updated rows */
+.grid-canvas .updated_row {
+  background: #ccc;
+}
+
+/* To highlight row at fault */
+.grid-canvas .new_row.error, .grid-canvas .updated_row.error {
+  background: #f2dede !important;
+}
+
+/* Disabled row */
+.grid-canvas .disabled_row {
+  background: #eeeeee;
+}
+
+/* Disabled cell */
+.grid-canvas .disabled_cell {
+  color: #999999;
+}
+
+/* Override selected row color */
+#datagrid .slick-row .slick-cell.selected {
+    background-color: #DEE8F1;
+}
+
+/* color the first column */
+#datagrid .slick-row .slick-cell.l0.r0 {
+  background-color: #e8e8e8;
+}
+
+#datagrid .slick-row .slick-cell.l0.r0.selected {
+  background-color: #2C76B4;
+}
+
+.slick-cell span[data-cell-type="row-header-selector"] {
+  display: block;
+  text-align: center;
+}
+
+.slick-cell.selected span[data-cell-type="row-header-selector"] {
+  color: white;
+}
+
+#datagrid div.slick-header.ui-state-default {
+  background: #ffffff;
+  border-bottom: none;
+  border-right: none;
+  border-top: 1px solid #888;
+}
+
+/*
+  SlickGrid, To fix the issue of width misalignment between Column Header &
+  actual Column in Mozilla Firefox browser
+  Ref: https://github.com/mleibman/SlickGrid/issues/742
+*/
+.slickgrid, .slickgrid *, .slick-header-column {
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -ms-box-sizing: content-box;
+}
+
+.select-all-icon {
+  margin-left: 9px;
+  margin-right: 4px;
+  vertical-align: bottom;
+  position: absolute;
+  bottom: 4px;
+  right: 0;
+}
+
+.slick-cell, .slick-headerrow-column {
+  border-right: 1px solid #ccc;
+  z-index: 0;
+}
+
+/* Style for text editor */
+.pg_text_editor {
+  z-index:10000;
+  position:absolute;
+  background: #fff;
+  padding: 7px 5px 5px 1px;
+  border:2px solid #888;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+.pg_textarea {
+  backround:#fff;
+  width:250px;
+  height:80px;
+  border:0;
+  outline:0;
+}
+.pg_buttons {
+  text-align:right;
+}
+
+#datagrid .slick-row .slick-cell {
+  white-space: pre;
+}
+
+/* CSS for connection status icon */
+#output-panel .CodeMirror {
+  border-top: 1px solid #ddd;
+}
+
+.connection_status_wrapper {
+  width: 100%;
+  background-color: #f7f7f7;
+}
+
+.editor-title {
+  padding: 4px 5px;
+  font-size: 13px;
+  display: inline-block;
+}
+
+.connection_status {
+  width: 11px;
+  position: relative;
+  display: inline-block;
+  margin-top: 2px;
+  margin-left: 12px;
+  margin-right: 16px;
+}
+
+.connection_status .fa {
+  font-size: 16px;
+  margin-left: 2px;
+}
+
+.connection_status .fa-clock-o,
+.connection_status .fa-hourglass-half {
+  color: #e8a735;
+}
+
+.connection_status .fa-exclamation-circle,
+.connection_status .fa-exclamation-triangle {
+  color: #d0021b;
+}
+
+.connection_status .fa-custom {
+  margin-bottom: -4px;
+  height: 18px;
+  width: 18px;
+  display: block;
+  background-repeat: no-repeat;
+  content: '';
+}
+
+.connection_status .fa-query-tool-connected {
+  background-image: url('../img/connect.svg');
+}
+
+.connection_status .fa-query-tool-disconnected {
+  background-image: url('../img/disconnect.svg');
+}
+
+.sql-editor .dropdown-toggle:focus,
+.sql-editor .copy-all:focus {
+  outline: 5px auto -webkit-focus-ring-color;
+}
+
+.ajs-body .warn-icon {
+  color:#f1c40f;
+  font-size: 2em;
+  margin-right: 20px;
+  padding-top: 10px;
+}
+.ajs-body .warn-header {
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 3em;
+}
+
+.ajs-body .warn-body {
+  font-size: 13px;
+}
+
+.ajs-body .warn-footer {
+  font-size: 13px;
+  line-height: 3em;
+}
+
+/* For Filter status bar */
+.data_sorting_dialog .pg-prop-status-bar {
+  position: absolute;
+  bottom: 37px;
+  z-index: 5;
+}
+
+.data_sorting_dialog .CodeMirror-gutter-wrapper {
+  left: -30px !important;
+}
+
+.data_sorting_dialog .CodeMirror-gutters {
+  left: 0px !important;
+}
+
+.data_sorting_dialog .custom_height_css_class {
+  height: 100px;
+}
+
+.data_sorting_dialog .data_sorting {
+  padding: 10px 0px;
+}

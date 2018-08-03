@@ -1,0 +1,33 @@
+.aciTree .aciTreeText {
+    font-family: 'Open Sans';
+    font-size: 12px;
+}
+
+/* Hover over an element */
+.aciTree .aciTreeLine.aciTreeHover .aciTreeItem  {
+    background-color: #e7f2ff;
+    border-color: #84acdd;
+}
+
+.aciTree .aciTreeLine.aciTreeHover .aciTreeText  {
+    color: black;
+}
+
+/* Selected element and in focus*/
+.aciTree.aciTreeFocus .aciTreeFocus > .aciTreeLine .aciTreeItem {
+    background-color: #e7f2ff;
+}
+
+.aciTree.aciTreeFocus .aciTreeFocus > .aciTreeLine .aciTreeText {
+    color: black;
+}
+
+/* Selected element but not in focus */
+.aciTree .aciTreeSelected > .aciTreeLine .aciTreeItem {
+    background-color: #e7f2ff;
+    border-color: #84acdd;
+}
+
+.aciTree .aciTreeItem {
+    white-space: nowrap !important;
+}

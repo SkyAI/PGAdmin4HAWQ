@@ -1,0 +1,228 @@
+#define MyAppName MYAPP_NAME
+#define MyAppVersion MYAPP_VERSION
+#define MyAppPublisher "The pgAdmin Development Team"
+#define MyAppURL "www.pgadmin.org"
+#define MyAppExeName "pgAdmin4.exe"
+#define MyAppID "C14F64E7-DCB9-4DE1-8560-16F08FCFF64E"
+#define MyAppFullVersion MYAPP_FULLVERSION
+#define MyAppArchitecturesMode MYAPP_ARCHITECTURESMODE
+#define MyAppVCDist MYAPP_VCDIST
+#define MyAppInvalidPath "Please provide a valid path."
+
+[Setup]
+AppId={#MyAppName}{#MyAppVersion}
+AppName={#MyAppName}
+AppVersion={#MyAppFullVersion}
+AppPublisher={#MyAppPublisher}
+AppPublisherURL={#MyAppURL}
+AppSupportURL={#MyAppURL}
+AppUpdatesURL={#MyAppURL}
+DefaultDirName={pf}\{#MyAppName}\{#MyAppVersion}
+DefaultGroupName={#MyAppName}
+DisableWelcomePage=no
+DisableProgramGroupPage=auto
+LicenseFile=Resources\license.rtf
+OutputBaseFilename=setup
+SetupIconFile=Resources\pgAdmin4.ico
+Compression=lzma
+SolidCompression=yes
+PrivilegesRequired=admin
+ChangesEnvironment=yes
+;UninstallFilesDir={app}\{#MyAppVersion}
+ArchitecturesInstallIn64BitMode={#MyAppArchitecturesMode}
+AllowNoIcons=yes
+
+[Languages]
+Name: "english"; MessagesFile: "compiler:Default.isl"
+
+;This section will override the standered error message by default which is called internally and  we don't have a controll over this.
+[Messages]
+InvalidPath={#MyAppInvalidPath}
+
+;This section would be used for customized error message display.
+[CustomMessages]
+english.NewerVersionExists=A newer version of {#MyAppName}
+english.InvalidPath={#MyAppInvalidPath}
+
+[Icons]
+Name: {group}\{#MyAppName} {#MyAppVersion}; Filename: {app}\runtime\{#MyAppExeName}; IconFilename: {app}\pgAdmin4.ico; WorkingDir: {app}\runtime;
+
+[Files]
+Source: "..\..\win-build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs;
+
+[Run]
+Filename: "{app}\installer\{#MyAppVCDist}"; StatusMsg: "VC runtime redistributable package"; Parameters: "/passive /verysilent /norestart"; Check: InstallVC;
+Filename: "{app}\runtime\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: runascurrentuser nowait postinstall skipifsilent
+
+[Registry]
+Root: HKLM; Subkey: "Software\{#MyAppName}\{#MyAppVersion}"; Flags: uninsdeletekeyifempty
+Root: HKLM; Subkey: "Software\{#MyAppName}\{#MyAppVersion}"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\{#MyAppName}\{#MyAppVersion}"; ValueType: string; ValueName: "InstallPath"; ValueData: "{app}"
+Root: HKLM; Subkey: "Software\{#MyAppName}\{#MyAppVersion}"; ValueType: string; ValueName: "Version"; ValueData: "{#MyAppFullVersion}"
+
+[Code]
+var
+  UpgradeMode: Boolean;
+
+function IsPathValid(Path: string): Boolean;
+var
+  I: Integer;
+  Ret: Boolean;
+begin
+  Ret := True;
+  Path := Uppercase(Path);
+  Result :=
+    (Length(Path) >= 3) and
+    (Path[1] >= 'A') and (Path[1] <= 'Z') and
+    (Path[2] = ':') and
+    (Path[3] = '\');
+
+  if Result then
+  begin
+    for I := 3 to Length(Path) do
+      begin
+        case Path[I] of
+          '0'..'9', 'A'..'Z', '\', ' ', '.', '-', '(', ')':
+          else
+          begin
+            Ret := False;
+            break;
+          end;
+      end;
+    end;
+  end;
+  Result := Ret;
+end;
+
+// Find current version before installation
+function InitializeSetup: Boolean;
+var
+  Version: String;
+begin
+  if RegValueExists(HKEY_LOCAL_MACHINE,'Software\{#MyAppName}\{#MyAppVersion}', 'Version') then
+  begin
+	UpgradeMode := True;
+    RegQueryStringValue(HKEY_LOCAL_MACHINE,'Software\{#MyAppName}\{#MyAppVersion}', 'Version', Version);
+    if Version > '{#MyAppFullVersion}' then
+    begin
+      MsgBox(ExpandConstant('{cm:NewerVersionExists}' + '(v' + Version + ') is already installed' ), mbInformation, MB_OK);
+      Result := False;
+    end
+    else
+    begin
+      Result := True;
+    end;
+  end
+  else
+  begin
+    Result := True;
+	UpgradeMode := False;
+  end;
+end;
+
+function IsUpgradeMode(): Boolean;
+begin
+  Result := UpgradeMode;
+end;
+
+function InstallVC: Boolean;
+begin
+  Result := True;
+end;
+
+// This function would be called during upgrade mode
+// In upgrade mode - delete web/* and exclude config_local.py
+procedure DelWebfolder(Path: string);
+var
+  FindRec: TFindRec;
+  FilePath: string;
+begin
+  if FindFirst(Path + '\*', FindRec) then
+  begin
+    try
+      repeat
+        if (FindRec.Name <> '.') and (FindRec.Name <> '..') then
+        begin
+          FilePath := Path + '\' + FindRec.Name;
+          if FindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY = 0 then
+          begin
+            if CompareText(FindRec.Name, 'config_local.py') <> 0 then
+            begin
+              DeleteFile(FilePath);
+            end
+          end
+          else
+            begin
+              DelWebfolder(FilePath);
+              RemoveDir(FilePath);
+            end;
+          end;
+        until not FindNext(FindRec);
+      finally
+      FindClose(FindRec);
+    end;
+  end;
+end;
+
+// This function would be called during upgrade mode
+// In upgrade mode - delete venv/* for example
+procedure DelFolder(Path: string);
+var
+  FindRec: TFindRec;
+  FilePath: string;
+begin
+  if FindFirst(Path + '\*', FindRec) then
+  begin
+    try
+      repeat
+        if (FindRec.Name <> '.') and (FindRec.Name <> '..') then
+        begin
+          FilePath := Path + '\' + FindRec.Name;
+          if FindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY = 0 then
+          begin
+            DeleteFile(FilePath);
+          end
+          else
+            begin
+              DelFolder(FilePath);
+              RemoveDir(FilePath);
+            end;
+          end;
+        until not FindNext(FindRec);
+      finally
+      FindClose(FindRec);
+    end;
+  end;
+end;
+
+//procedure CurPageChanged(CurPageID: Integer);
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+  Ret: Boolean;
+begin
+  Ret := True;
+  case CurPageID of
+    wpSelectDir:
+      begin
+        // Validate InstallDir path
+        if Not IsPathValid(ExpandConstant('{app}')) then
+        begin
+          MsgBox(ExpandConstant('{cm:InvalidPath}'), mbError, MB_OK);
+          Ret := False;
+        end;
+      end;
+
+    wpReady:
+	begin
+      if (IsUpgradeMode) then
+      begin
+        DelWebfolder(ExpandConstant('{app}\web'));
+        DelFolder(ExpandConstant('{app}\venv'));
+      end;
+	end;
+  end;
+
+  Result := Ret;
+end;
+
+// End of program
